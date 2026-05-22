@@ -2,22 +2,20 @@
 
 #include <stdint.h>
 
-#if defined(_WIN32)
-#if defined(PROFILER_BUILD)
-#define PROFILER_API __declspec(dllexport)
-#else
-#define PROFILER_API __declspec(dllimport)
-#endif
-#else
-#define PROFILER_API
-#endif
-
 namespace Profiler {
-static const uint32_t INVALID_NODE = 0xffffffffu;
+
+static const uint32_t INVALID_NODE = UINT32_MAX;
+
+struct Config {
+  uint32_t MaxNodesPerFrame;
+  uint32_t MaxScopeDepth;
+  uint32_t MaxThreads;
+};
 
 struct ProfileNode {
   uint32_t Parent;
   uint32_t FirstChild;
+  uint32_t LastChild;
   uint32_t NextSibling;
 
   uint64_t StartTime;
@@ -35,5 +33,4 @@ struct ProfileFrameView {
   uint64_t FrameEnd;
 };
 
-PROFILER_API ProfileFrameView GetLastFrame() noexcept;
 } // namespace Profiler
